@@ -3,7 +3,7 @@ import MessageList from './components/MessageList';
 import {BiCalculator} from 'react-icons/bi';
 import socketIOClient from "socket.io-client";
 
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 const ENDPOINT = "http://127.0.0.1:4001";
 
@@ -17,6 +17,7 @@ function App() {
 
   const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
   // const messageList = [
   //   {
@@ -43,23 +44,29 @@ function App() {
 
   const handleInputChange = (e) => {
     setMessage(e.target.value)
+
+    
+
+   
   }
 
   const handleMessageSend = (e) => {
     e.preventDefault();
-    newSocket.emit('chat message', message);
-    const newMessageList = [...messageList, {
-      message: message,
-      sender: "user",
-      date: Date.now()
-    }]
-    setMessageList(newMessageList);
+    if(!error) {
+      newSocket.emit('chat message', message);
+      const newMessageList = [...messageList, {
+        message: message,
+        sender: "user",
+        date: Date.now()
+      }]
+      setMessageList(newMessageList);
+    }
   }
 
   return (
     <div className="div--chat">
       <form className="chat">
-        <a className="link--older-posts">See older calculations</a>
+        <p className="link--older-posts">See older calculations</p>
         <div className="messages">
           <MessageList messageList={messageList} />
         </div>

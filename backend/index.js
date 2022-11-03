@@ -20,8 +20,16 @@ io.on("connection", (socket) => {
 
     socket.on('chat message', (message) => {
         // TODO backend logic
+        let response;
+        var value = /(\+|-|\*|\/)/.test(message);
+        //TODO add / and -
+        if(!value) {
+            response = "Sorry this is not a calculation! Insert something like 1 + 1"
+        } else {
+            response = eval(message);
+        }
         console.log("message" + message);
-        io.emit('chat message', message)
+        io.emit('chat message', response)
     })
 
     socket.on("disconnect", () => {
