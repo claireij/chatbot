@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const Chat = require('./models/ChatSchema');
+const  connect  = require("./dbconnection");
 
 const port = process.env.PORT || 4001;
 const app = express();
@@ -26,7 +27,7 @@ io.on("connection", (socket) => {
         var stringTest = /^[a-zA-Z]+$/.test(message);
         //TODO add / and -
         if(stringTest) {
-            response = "Oh wow, seems like you're using letter in your calculation. We're so sorry, but we're not that advanced in algebra. Maybe you just give me numbers, alright?"
+            response = "Oh wow, seems like you're using letters in your calculation. We're so sorry, but we're not that advanced in algebra. Maybe you just give me numbers, alright?"
         } else if (!operatorTest) {
           response = "Sorry this is not a calculation! Insert something like 1 + 1"
         }else {
@@ -36,8 +37,11 @@ io.on("connection", (socket) => {
         io.emit('chat message', response);
 
         //TODO save bot answers too
-        let  chatMessage  =  new Chat({ userMessage: message, botAnswer: response});
-        chatMessage.save();
+        connect.then(() => {
+          let  chatMessage  =  new Chat({ userMessage: message, botAnswer: response});
+          chatMessage.save();
+        });
+        
     })
 
     socket.on("old messages", () => {
