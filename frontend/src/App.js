@@ -25,47 +25,31 @@ function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
 
-  // fetching initial chat messages from the database
-const getOldMessages = () => {
-  fetch(ENDPOINT + "/chats")
-  .then(data  =>  {
-  return  data.json();
-  })
-.then(json  =>  {
-  console.log(json);
-  let newArray = [];
-  json.map(data  =>  {
-    //TODO sollten die Daten im Frontend nicht gleich aufgebaut sein, wie im Backend?
-    // Sonst hier data.createAt in eine Zeile schreiben
-    const oldUserMessage = {
-      sender: "user",
-      message: data.userMessage,
-      date: data.createdAt
-    };
-    const oldBotAnswer = {
-      sender: "bot",
-      message: data.botAnswer,
-      date: data.createdAt
-    }
-    newArray.push(oldUserMessage);
-    newArray.push(oldBotAnswer);
-  });
-  setMessageList(newArray);
-});
-};
+  newSocket.on('old messages', function(oldMessageList) {
+    let newArray = [];
+    let parsedList = JSON.parse(oldMessageList);
+    parsedList.map(data  =>  {
 
-  // const messageList = [
-  //   {
-  //     sender: "bot",
-  //     message: "some message",
-  //     date: "24.02.2031 14:03"
-  //   },
-  //   {
-  //     sender: "user",
-  //     message: "some other message",
-  //     date: "03.02.2001 14:00"
-  //   }
-  // ]
+      const oldUserMessage = {
+        sender: "user",
+        message: data.userMessage,
+        date: data.createdAt
+      };
+      const oldBotAnswer = {
+        sender: "bot",
+        message: data.botAnswer,
+        date: data.createdAt
+      }
+      newArray.push(oldUserMessage);
+      newArray.push(oldBotAnswer);
+    });
+    setMessageList(newArray);
+  });
+
+  const getOldMessages = () => {
+    newSocket.emit('old messages');
+  }
+  
 
   newSocket.on('chat message', function(msg) {
     const newMessageList = [...messageList, {
