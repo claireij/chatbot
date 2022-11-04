@@ -7,7 +7,11 @@ import {useState, useEffect} from 'react';
 
 // TODO: favicon austauschen
 
-const ENDPOINT = "http://127.0.0.1:4001";
+let ENDPOINT = "http://127.0.0.1:4001";
+
+if(process.env.NODE_ENV === 'production'){  
+  ENDPOINT = "https://chatbot-claire.herokuapp.com";
+}
 
 //TODO prüfen ob es einen besseren Weg gibt, das einzubinden
 const newSocket = socketIOClient(ENDPOINT);
