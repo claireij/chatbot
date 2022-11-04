@@ -4,6 +4,7 @@
   "description": "Backend of a chatbot that resolves simple calculations.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "DEBUG=nodejs-mysql:* nodemon ./bin/www"
   },
