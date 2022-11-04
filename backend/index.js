@@ -6,6 +6,19 @@ const port = process.env.PORT || 4001;
 const app = express();
 const server = http.createServer(app);
 
+// db settings
+const  Chat  = require("./models/Chat");
+const  connect  = require("./dbconnection");
+
+const  bodyParser  = require("body-parser");
+const  chatRouter  = require("./route/chatroute");
+
+//bodyparser middleware
+app.use(bodyParser.json());
+
+//routes
+app.use("/chats", chatRouter);
+
 const io = socketIo(server, {
     cors: {
         // TODO hardcodierung auflösen
@@ -29,8 +42,16 @@ io.on("connection", (socket) => {
             response = eval(message);
         }
         console.log("message" + message);
-        io.emit('chat message', response)
+        io.emit('chat message', response);
+
+        //TODO save bot answers too
+        let  chatMessage  =  new Chat({ message: message, sender: "user"});
+        chatMessage.save();
     })
+
+    socket.on("older messages", () => {
+        console.log("older messages");
+      });
 
     socket.on("disconnect", () => {
         console.log("Client disconnected");
