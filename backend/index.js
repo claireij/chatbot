@@ -22,12 +22,13 @@ io.on("connection", (socket) => {
 
     socket.on('chat message', (message) => {
         // TODO backend logic
+        // Add a success or no success parameter, only add in database if succesful
         let response;
         var operatorTest = /(\+|-|\*|\/)/.test(message);
         var stringTest = /^[a-zA-Z]+$/.test(message);
         //TODO add / and -
         if(stringTest) {
-            response = "Oh wow, seems like you're using letters in your calculation. We're so sorry, but we're not that advanced in algebra. Maybe you just give me numbers, alright?"
+            response = "Oh wow, seems like you're using letters in your calculation. I'm so sorry, but we're not that advanced in algebra. Maybe you just give me numbers, alright?"
         } else if (!operatorTest) {
           response = "Sorry this is not a calculation! Insert something like 1 + 1"
         }else {
