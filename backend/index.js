@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const Chat = require('./models/ChatSchema');
-const  connect  = require("./dbconnection");
 
 const port = process.env.PORT || 4001;
 const app = express();
