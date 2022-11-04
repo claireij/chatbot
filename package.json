@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/claireij/chatbot/issues"
   },
+  "engines": {
+    "node": "16.15.0"
+},
   "homepage": "https://github.com/claireij/chatbot#readme"
 }
