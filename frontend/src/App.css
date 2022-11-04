@@ -1,3 +1,5 @@
+
+
 #root {
   display: flex;
   justify-content: center;
@@ -18,6 +20,8 @@
   justify-content: flex-end;
   border-radius: 15px;
 }
+
+
 
 .chat {
   overflow: scroll;
@@ -123,4 +127,20 @@ button {
   padding: 10px;
   border-radius: 100%;
   height: auto;
+}
+
+@media screen and (max-width: 700px) {
+  .div--chat {
+    width: 80%;
+  height: 80%;
+  }
+
+  .bubble {
+    width: 75%;
+  }
+
+  .bubble.option {
+    width: 60%;
+    padding: 10px;
+  }
 }
