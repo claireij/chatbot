@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 //CORS Setup
 
-const whitelist = [process.env.REACT_APP_URL]
+const whitelist = ["http://localhost:3000"]
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
@@ -37,7 +37,8 @@ app.use("/chats", chatRouter);
 
 const io = socketIo(server, {
     cors: {
-        origin: process.env.REACT_APP_URL,
+        // TODO hardcodierung auflösen
+        origin: "http://localhost:3000",
         methods: ["GET", "POST"],
         credentials: true
     }
