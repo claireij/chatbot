@@ -7,11 +7,11 @@ const app = express();
 const server = http.createServer(app);
 
 // db settings
-const  Chat  = require("./models/Chat");
+const  Chat  = require("./models/ChatSchema");
 const  connect  = require("./dbconnection");
 
 const  bodyParser  = require("body-parser");
-const  chatRouter  = require("./route/chatroute");
+const  chatRouter  = require("./routes/chatRoute");
 
 //bodyparser middleware
 app.use(bodyParser.json());
