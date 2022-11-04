@@ -5,6 +5,8 @@ import socketIOClient from "socket.io-client";
 
 import {useState, useEffect} from 'react';
 
+// TODO: favicon austauschen
+
 const ENDPOINT = "http://127.0.0.1:4001";
 
 //TODO prüfen ob es einen besseren Weg gibt, das einzubinden
@@ -27,13 +29,26 @@ const getOldMessages = () => {
   })
 .then(json  =>  {
   console.log(json);
-json.map(data  =>  {
-  //TODO: Needs to be added in the Message List
-  console.log(data)
-});
+  let newArray = [];
+  json.map(data  =>  {
+    //TODO sollten die Daten im Frontend nicht gleich aufgebaut sein, wie im Backend?
+    // Sonst hier data.createAt in eine Zeile schreiben
+    const oldUserMessage = {
+      sender: "user",
+      message: data.userMessage,
+      date: data.createdAt
+    };
+    const oldBotAnswer = {
+      sender: "bot",
+      message: data.botAnswer,
+      date: data.createdAt
+    }
+    newArray.push(oldUserMessage);
+    newArray.push(oldBotAnswer);
+  });
+  setMessageList(newArray);
 });
 };
-
 
   // const messageList = [
   //   {
@@ -60,10 +75,6 @@ json.map(data  =>  {
 
   const handleInputChange = (e) => {
     setMessage(e.target.value)
-
-    
-
-   
   }
 
   const handleMessageSend = (e) => {
@@ -82,7 +93,7 @@ json.map(data  =>  {
   return (
     <div className="div--chat">
       <form className="chat">
-        <p className="link--older-posts">See older calculations</p>
+        <div className="link--older-posts" onClick={getOldMessages}>See older calculations</div>
         <div className="messages">
           <MessageList messageList={messageList} />
         </div>

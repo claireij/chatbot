@@ -1,14 +1,15 @@
 const  express  = require("express");
 const  connect  = require("./../dbconnection");
-const  Chats  = require("./../models/ChatSchema");
+const  Chat  = require("./../models/ChatSchema");
 
 const  router  =  express.Router();
 
-router.route("/chats").get((req, res, next) =>  {
+router.route("/").get((req, res, next) =>  {
+    console.log("In chat route");
         res.setHeader("Content-Type", "application/json");
         res.statusCode  =  200;
         connect.then(db  =>  {
-            Chats.find({}).then(chat  =>  {
+            Chat.find({}).then(chat  =>  {
             res.json(chat);
         });
     });

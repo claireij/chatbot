@@ -1,10 +1,26 @@
 const express = require('express');
+const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
 
 const port = process.env.PORT || 4001;
 const app = express();
 const server = http.createServer(app);
+
+//CORS Setup
+
+const whitelist = ["http://localhost:3000"]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
+}
+app.use(cors(corsOptions))
 
 // db settings
 const  Chat  = require("./models/ChatSchema");
