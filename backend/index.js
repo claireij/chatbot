@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const Chat = require('./models/ChatSchema');
+const connect = require('./dbconnection');
 
 const port = process.env.PORT || 4001;
 const app = express();
@@ -45,13 +46,14 @@ io.on("connection", (socket) => {
     })
 
     socket.on("old messages", () => {
-      
+      connect.then(() => {
       Chat.find({}).then(chats  =>  {
         let variable = JSON.stringify(chats);
         console.log(variable);
         io.emit('old messages', variable);
     });
       });
+    });
 
     socket.on("disconnect", () => {
         console.log("Client disconnected");
