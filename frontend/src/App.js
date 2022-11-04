@@ -3,9 +3,15 @@ import MessageList from './components/MessageList';
 import {BiCalculator} from 'react-icons/bi';
 import socketIOClient from "socket.io-client";
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
-const ENDPOINT = "http://127.0.0.1:4001";
+// TODO: favicon austauschen
+
+let ENDPOINT = "http://127.0.0.1:4001";
+
+if(process.env.NODE_ENV === 'production'){  
+  ENDPOINT = "https://chatbot-claire.herokuapp.com";
+}
 
 //TODO prüfen ob es einen besseren Weg gibt, das einzubinden
 const newSocket = socketIOClient(ENDPOINT);
@@ -15,26 +21,62 @@ const newSocket = socketIOClient(ENDPOINT);
 
 function App() {
 
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState([
+    {
+      sender: "bot",
+      message: "Hi!",
+      date: Date.now()
+    }, 
+    {
+      sender: "bot",
+      message: "What do you want to do today?",
+      date: Date.now()
+    }
+  ]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
+  const [calculate, setCalculate] = useState(false);
 
-  // const messageList = [
-  //   {
-  //     sender: "bot",
-  //     message: "some message",
-  //     date: "24.02.2031 14:03"
-  //   },
-  //   {
-  //     sender: "user",
-  //     message: "some other message",
-  //     date: "03.02.2001 14:00"
-  //   }
-  // ]
+  newSocket.on('old messages', function(oldMessageList) {
+    let newArray = [];
+    let parsedList = JSON.parse(oldMessageList);
+    parsedList.map(data  =>  {
+
+      const oldUserMessage = {
+        sender: "user",
+        message: data.userMessage,
+        date: data.createdAt
+      };
+      const oldBotAnswer = {
+        sender: "bot",
+        message: data.botAnswer,
+        date: data.createdAt
+      }
+      newArray.push(oldUserMessage);
+      newArray.push(oldBotAnswer);
+    });
+    newArray.push({
+      message: "Great! What do you want to do next?",
+      sender: "bot",
+      //TODO change date to date from the database
+      date: Date.now()
+    })
+    setMessageList(newArray);
+  });
+
+  const getOldMessages = () => {
+    newSocket.emit('old messages');
+  }
+  
 
   newSocket.on('chat message', function(msg) {
     const newMessageList = [...messageList, {
       message: msg,
+      sender: "bot",
+      //TODO change date to date from the database
+      date: Date.now()
+    }, {
+      message: "Great! What do you want to do next?",
       sender: "bot",
       //TODO change date to date from the database
       date: Date.now()
@@ -60,18 +102,22 @@ function App() {
         date: Date.now()
       }]
       setMessageList(newMessageList);
+      setCalculate(false);
     }
   }
 
   return (
     <div className="div--chat">
       <form className="chat">
-        <p className="link--older-posts">See older calculations</p>
+        
         <div className="messages">
           <MessageList messageList={messageList} />
         </div>
-        <div className="div--input">
+        {
+        calculate ?
+         <div className="div--input">
           <input 
+          placeholder="Enter your calculation"
           type="text"
           value={message}
           onChange={handleInputChange}
@@ -80,9 +126,17 @@ function App() {
           onClick={handleMessageSend}
           >
             <BiCalculator className="button--icon" />
-            Calculate me now!
           </button>
-        </div>
+        </div> 
+        : <div className="options">
+        <div className="bubble option" onClick={getOldMessages}>See older calculations!</div>
+        <div className="bubble option" onClick={()=>{
+          setCalculate(true) 
+          setMessageList([...messageList, {sender: "bot", message: "Ok, let's go then!", date: Date.now()}])
+          }}>Make a new calculation!</div>
+      </div>
+        }
+        
       </form>
     </div>
   );
