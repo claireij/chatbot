@@ -1,0 +1,21 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "A simple chatbot that can solve calculations.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install npm && run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claireij/chatbot.git"
+  },
+  "author": "Claire Ruppel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/claireij/chatbot/issues"
+  },
+  "homepage": "https://github.com/claireij/chatbot#readme"
+}
