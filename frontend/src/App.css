@@ -4,7 +4,8 @@
   align-items: center;
   height: 100vh;
   width: 100%;
-  background-color: #f3f6f4;
+  background-color: #d9d9d9;
+  box-sizing: content-box;
 }
 
 .div--chat {
@@ -50,12 +51,28 @@
 }
 
 .bubble.bot {
-  background-color: #d9d9d9;
+  background-color: #f3f6f4;
 
 }
 
+.bubble.option {
+  cursor:pointer;
+  width: 50%;
+  color: #ff674d;
+  border: 2px solid #ff674d;
+  font-weight: bold;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.bubble.option:hover {
+  background-color: #ff674d;
+  color: #fff;
+}
+
 .bubble.user {
-  background-color: turquoise;
+  color: #fff;
+  background-color: #7776BC;
   align-self: flex-end;
 }
 
@@ -63,8 +80,8 @@
   width: 100%;
   justify-content: space-between;
   display: flex;
-  flex-direction: column;
-  /* align-items: center; */
+  /* flex-direction: column; */
+  align-items: center;
 }
 
 .messages {
@@ -79,25 +96,31 @@
 .button--icon {
   height: 25px;
   width: 25px;
+  color: #ff674d;
 }
 
 input {
-  margin-bottom: 10px;
+  background-color: #f3f6f4;
+  border-radius: 15px;
+  height: 20px;
+  width: 75%;
+  border: 1px solid #d9d9d9;
+  padding: 10px;
+
+}
+
+input:active {
+  /* TODO Vielleicht noch ändern */
+  border:none;
 }
 
 button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: orange;
-  border: none;
-  padding: 5px;
+  background: none;
+  border: 0.7px solid #d9d9d9;
+  padding: 10px;
+  border-radius: 100%;
   height: auto;
-}
-
-.link--older-posts {
-  text-decoration: underline;
-  color: blue;
-  margin-bottom: 30px;
-  align-self: center;
 }
