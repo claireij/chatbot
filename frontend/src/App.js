@@ -19,6 +19,22 @@ function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
 
+  // fetching initial chat messages from the database
+const getOldMessages = () => {
+  fetch(ENDPOINT + "/chats")
+  .then(data  =>  {
+  return  data.json();
+  })
+.then(json  =>  {
+  console.log(json);
+json.map(data  =>  {
+  //TODO: Needs to be added in the Message List
+  console.log(data)
+});
+});
+};
+
+
   // const messageList = [
   //   {
   //     sender: "bot",
