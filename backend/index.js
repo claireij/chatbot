@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
         io.emit('chat message', response);
 
         //TODO save bot answers too
-        let  chatMessage  =  new Chat({ message: message, sender: "user"});
+        let  chatMessage  =  new Chat({ userMessage: message, botAnswer: response});
         chatMessage.save();
     })
 
