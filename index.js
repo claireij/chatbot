@@ -20,6 +20,18 @@ const io = socketIo(server, {
 io.on("connection", (socket) => {
     console.log("New client connected");
 
+    // TODO NEEDS TO BE DELETED
+
+    socket.on("echo", function (msg, callback) {
+      callback = callback || function () {};
+  
+      socket.emit("echo", msg);
+  
+      callback(null, "Done.");
+    });
+
+    //NEEDS TO BE DELETED UNTIL HERE
+
     socket.on('chat message', (message) => {
         // TODO backend logic
         // Add a success or no success parameter, only add in database if succesful
@@ -64,7 +76,7 @@ io.on("connection", (socket) => {
         }  
         
         io.emit('chat message', response);
-        
+
     })
 
     socket.on("old messages", () => {
@@ -93,3 +105,5 @@ if(process.env.NODE_ENV === 'production'){
                     'index.html' ));    
   });
 }
+
+module.exports = server;
