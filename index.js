@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
         } else if (!numberTest && !operatorTest && whitespaceTest) {
           response = "Ok, this is just whitespace... Maybe try again?"
         } else if (numberTest && operatorTest && !whitespaceTest) {
+          //Doesnt work yet!
           response = "Looks like you wrote your calculation without whitespaces. Please insert something like 1 + 1."
         } else if (!numberTest && operatorTest && whitespaceTest) {
           response = "Looks like you didn't use any numbers in there. Hard one to calculate... try again!";
@@ -51,17 +52,19 @@ io.on("connection", (socket) => {
         }
         
         
+
         else {
 
             response = eval(message);
-
-            io.emit('chat message', response);
 
         connect.then(() => {
           let  chatMessage  =  new Chat({ userMessage: message, botAnswer: response});
           chatMessage.save();
         });
-        }    
+        }  
+        
+        io.emit('chat message', response);
+        
     })
 
     socket.on("old messages", () => {
