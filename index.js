@@ -176,7 +176,7 @@ io.on("connection", (socket) => {
 
         response = {
           success: true,
-          // message: eval(message),
+          message: eval(message),
         };
   
         connect.then(() => {
@@ -205,7 +205,6 @@ io.on("connection", (socket) => {
             success: true,
             oldMessagesList: oldMessagesListJson,
           };
-          console.log(response);
           io.emit("old messages", response);
         });
     });
