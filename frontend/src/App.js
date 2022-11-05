@@ -103,6 +103,7 @@ function App() {
       }]
       setMessageList(newMessageList);
       setCalculate(false);
+      setMessage('');
     }
   }
 

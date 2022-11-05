@@ -6,9 +6,9 @@
   "scripts": {    
     "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon backend/index.js",
+    "server": "nodemon index.js",
     "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
-    "start": "node backend/index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
