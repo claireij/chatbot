@@ -25,12 +25,10 @@ function App() {
     {
       sender: "bot",
       message: "Hi!",
-      date: Date.now()
     }, 
     {
       sender: "bot",
       message: "What do you want to do today?",
-      date: Date.now()
     }
   ]);
   const [message, setMessage] = useState("");
@@ -58,25 +56,26 @@ function App() {
     let newArray = [];
     let parsedList = JSON.parse(oldMessageList);
     parsedList.map(data  =>  {
-
+      
+      const incomingDate = new Date(data.createdAt);
+      const formattedIncomingDate = `${incomingDate.getDate()}.${incomingDate.getMonth()+1}.${incomingDate.getFullYear()}  ${incomingDate.getHours()}:${incomingDate.getMinutes()}:${incomingDate.getSeconds()}`;
+      
       const oldUserMessage = {
         sender: "user",
         message: data.userMessage,
-        date: data.createdAt
+        date: formattedIncomingDate
       };
       const oldBotAnswer = {
         sender: "bot",
         message: data.botAnswer,
-        date: data.createdAt
+        date: formattedIncomingDate
       }
       newArray.push(oldUserMessage);
       newArray.push(oldBotAnswer);
     });
     newArray.push({
       message: "Great! What do you want to do next?",
-      sender: "bot",
-      //TODO change date to date from the database
-      date: Date.now()
+      sender: "bot"
     })
     setMessageList(newArray);
     scrollToBottom();
@@ -90,14 +89,10 @@ function App() {
   newSocket.on('chat message', function(msg) {
     const newMessageList = [...messageList, {
       message: msg,
-      sender: "bot",
-      //TODO change date to date from the database
-      date: Date.now()
+      sender: "bot"    
     }, {
       message: "Great! What do you want to do next?",
       sender: "bot",
-      //TODO change date to date from the database
-      date: Date.now()
     }]
     setMessageList(newMessageList);
   })
@@ -119,8 +114,7 @@ function App() {
       newSocket.emit('chat message', message);
       const newMessageList = [...messageList, {
         message: message,
-        sender: "user",
-        date: Date.now()
+        sender: "user"
       }]
       setMessageList(newMessageList);
       setCalculate(false);
@@ -155,7 +149,7 @@ function App() {
         <div className="bubble option" onClick={getOldMessages}>See older calculations!</div>
         <div className="bubble option" onClick={()=>{
           setCalculate(true) 
-          setMessageList([...messageList, {sender: "bot", message: "Ok, let's go then!", date: Date.now()}])
+          setMessageList([...messageList, {sender: "bot", message: "Ok, let's go then!"}])
           }}>Make a new calculation!</div>
       </div>
         }

@@ -34,6 +34,7 @@
 .message {
   display: flex;
   flex-direction: column;
+  /* margin-bottom: 10px; */
   /* margin-bottom: 15px; */
 }
 
@@ -48,6 +49,7 @@
   align-self: center;
   color: grey;
   font-size: 0.8em;
+  
 }
 
 .bubble>p {
@@ -125,6 +127,10 @@ button {
   padding: 10px;
   border-radius: 100%;
   height: auto;
+}
+
+.messages {
+  margin-bottom: 20px;
 }
 
 @media screen and (max-width: 700px) {

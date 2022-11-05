@@ -1,28 +1,38 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 function Message ({sender, message, date})  {
 
-    const [clicked, setClicked] = useState(false);
-
-    const handleMessageClick = () => {
-        setClicked(!clicked);
-    }
+    const [hovered, setHovered] = useState(false);
+    const [newMessageDate, setNewMessageDate] = useState();
+    
+        useEffect(() => {
+           
+            const current = new Date();
+            const current_date = `${current.getDate()}.${current.getMonth()+1}.${current.getFullYear()}  ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+            setNewMessageDate(current_date);
+            
+        }, [])
 
     const classNameBubble = "bubble " + sender;
 
     return (
-        <div className="message">
+        <div className="message"
+        onMouseEnter={() => {setHovered(true)}}
+        onMouseLeave={() => {setHovered(false)}}
+        >
             {
-                clicked ?
-                <div className="time">{date}</div> :
+                hovered ?
+                <div className="time">{date ? date : newMessageDate}</div> :
                 <></>
             }
             
             <div 
             className={classNameBubble}
-            onClick={handleMessageClick}
+            
             >
-                <p>{message}</p>
+                <p
+                 
+                >{message}</p>
             </div>
         </div>
     )
