@@ -37,9 +37,9 @@ function App() {
   const [error, setError] = useState(false);
   const [calculate, setCalculate] = useState(false);
 
-  newSocket.on('old messages', function(oldMessageList) {
+  newSocket.on('old messages', function(response) {
     let newArray = [];
-    let parsedList = JSON.parse(oldMessageList);
+    let parsedList = JSON.parse(response.oldMessagesList);
     parsedList.map(data  =>  {
 
       const oldUserMessage = {
@@ -69,9 +69,9 @@ function App() {
   }
   
 
-  newSocket.on('chat message', function(msg) {
+  newSocket.on('chat message', function(response) {
     const newMessageList = [...messageList, {
-      message: msg,
+      message: response.message,
       sender: "bot",
       //TODO change date to date from the database
       date: Date.now()

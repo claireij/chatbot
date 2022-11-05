@@ -20,6 +20,8 @@ describe("chatbot", () => {
     clientSocket.close();
   });
 
+//   Client connection test
+
   it("connect", () => {
     it("should connect socket", (done) => {
       clientSocket.on("connect", () => {
@@ -30,33 +32,45 @@ describe("chatbot", () => {
     });
   });
 
-  it("Sending messages to backend", function (done) {
-    clientSocket.on("chat message", function (message) {
-      assert.equal("8", message);
+//   Calculation tests
+
+  it("Calculations: Sending a valid calculation to backend", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal("5", response.message);
+      assert.equal(true, response.success);
       done();
     });
 
     clientSocket.emit("chat message", "1 + 4");
   });
 
-  it("Sending messages to backend2", function (done) {
-    clientSocket.on("chat message", function (message) {
-      assert.equal("7", message);
+  it("Calculations: Sending letters instead of a calculation", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
       done();
     });
-
-    clientSocket.emit("chat message", "1 + 4");
-  });
-
-  it("Sending messages to backend8", function (done) {
-    clientSocket.on("chat message", function (message) {
-      assert.equal(
-        "Oh wow, seems like you're using letters in your calculation. I'm so sorry, but we're not that advanced in algebra. Maybe you just give me numbers, alright?",
-        message
-      );
-      done();
-    });
-
     clientSocket.emit("chat message", "aa");
   });
+
+  it("Calculations: Sending a message without numbers or operators instead of a calculation", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      done();
+    });
+    clientSocket.emit("chat message", "&%$§");
+  });
+
+//   Old calculations test
+
+  it("Old calculations: ", function (done) {
+    clientSocket.on("old messages", function (response) {
+      assert.equal(false, response.success);
+      done();
+    });
+    clientSocket.emit("chat message");
+  });
+
+
 });
+
+
