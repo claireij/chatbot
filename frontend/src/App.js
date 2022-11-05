@@ -94,7 +94,10 @@ function App() {
 
   const handleMessageSend = (e) => {
     e.preventDefault();
-    if(!error) {
+    if(message.length == 0) {
+      setError(true);
+    }
+    if(message.length !=0) {
       newSocket.emit('chat message', message);
       const newMessageList = [...messageList, {
         message: message,
@@ -123,6 +126,7 @@ function App() {
           value={message}
           onChange={handleInputChange}
           ></input>
+          {error ? <p className="error">This field is required.</p> : <></>}
           <button
           onClick={handleMessageSend}
           >
