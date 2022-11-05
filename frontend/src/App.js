@@ -52,9 +52,9 @@ function App() {
   
   
 
-  newSocket.on('old messages', function(oldMessageList) {
+  newSocket.on('old messages', function(response) {
     let newArray = [];
-    let parsedList = JSON.parse(oldMessageList);
+    let parsedList = JSON.parse(response.oldMessagesList);
     parsedList.map(data  =>  {
       
       const incomingDate = new Date(data.createdAt);
@@ -86,9 +86,9 @@ function App() {
   }
   
 
-  newSocket.on('chat message', function(msg) {
+  newSocket.on('chat message', function(response) {
     const newMessageList = [...messageList, {
-      message: msg,
+      message: response.message,
       sender: "bot"    
     }, {
       message: "Great! What do you want to do next?",
