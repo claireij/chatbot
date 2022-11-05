@@ -3,7 +3,7 @@ import MessageList from './components/MessageList';
 import {BiCalculator} from 'react-icons/bi';
 import socketIOClient from "socket.io-client";
 
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, createRef} from 'react';
 
 // TODO: favicon austauschen
 
@@ -37,6 +37,23 @@ function App() {
   const [error, setError] = useState(false);
   const [calculate, setCalculate] = useState(false);
 
+
+  const scrollToBottom = () => {
+    const chat = document.querySelector("form");
+    console.log(chat);
+    chat.scrollTop = chat.scrollHeight;
+    console.log(chat.scrollHeight);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList])
+
+  
+
+  
+  
+
   newSocket.on('old messages', function(oldMessageList) {
     let newArray = [];
     let parsedList = JSON.parse(oldMessageList);
@@ -62,6 +79,7 @@ function App() {
       date: Date.now()
     })
     setMessageList(newArray);
+    scrollToBottom();
   });
 
   const getOldMessages = () => {

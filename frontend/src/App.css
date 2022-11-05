@@ -13,7 +13,7 @@
 .div--chat {
   background-color: #fff;
   width: 50%;
-  height: 50%;
+  height: 70%;
   padding: 5%;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,7 @@
 
 .chat {
   overflow: scroll;
+  scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
   /* TODO: die scroll function muss ganz oben sein */
@@ -33,7 +34,7 @@
 .message {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 
 .bubble {
@@ -60,6 +61,7 @@
 }
 
 .bubble.option {
+  padding: 10px 15px;
   cursor:pointer;
   width: 50%;
   color: #ff674d;
@@ -86,10 +88,6 @@
   display: flex;
   /* flex-direction: column; */
   align-items: center;
-}
-
-.messages {
-  margin-bottom: 30px;
 }
 
 /* TODO: rename */
