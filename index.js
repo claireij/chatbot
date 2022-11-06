@@ -222,12 +222,11 @@ io.on("connection", (socket) => {
 
     // Checks if the format of the input is valid
     if (inputfieldValidation(message)) {
-      console.log(inputfieldValidation(message));
       response = inputfieldValidation(message);
     } else {
       let messageArray = message.split(" ");
 
-
+      // Turn string of numbers into actual number
       for (let i = 0; i < messageArray.length; i++) {
         if (i % 2 === 0) {
           if (/^[0-9]+$/.test(messageArray[i])) {
@@ -236,12 +235,22 @@ io.on("connection", (socket) => {
         } 
       }
 
+      // Calculates the calculation that was sent by the user
       let result = calculate(messageArray);
 
-      response = {
-        success: true,
-        message: result,
-      };
+      if(result == null) {
+        response = {
+          success: false,
+          message: "Sorry, we were unable to solve this calculation."
+        }
+      } else {
+        response = {
+          success: true,
+          message: result,
+        };
+      }
+
+      
 
         let chatMessage = new Chat({
           userMessage: message,

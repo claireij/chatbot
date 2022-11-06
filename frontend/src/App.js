@@ -56,7 +56,7 @@ function App() {
   newSocket.on('old messages', function(response) {
     let parsedResponse = JSON.parse(response);
     console.log(parsedResponse.oldMessagesList);
-    let newArray = [];
+    let newArray = [...messageList];
 
     if(parsedResponse.success == false) {
       setMessageList([...messageList, {
