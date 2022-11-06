@@ -28,7 +28,6 @@
   scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
-  /* TODO: die scroll function muss ganz oben sein */
 }
 
 .message {
@@ -53,7 +52,6 @@
 }
 
 .bubble>p {
-  /* TODO: muss man es in p unterteilen? */
   margin: 0; 
 }
 
@@ -92,7 +90,6 @@
   align-items: center;
 }
 
-/* TODO: rename */
 #message {
   width: 90%;
 }

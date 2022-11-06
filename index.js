@@ -27,8 +27,7 @@ const inputfieldValidation = (message) => {
     },
     // Checks if there are only operators or numbers in the string
     onlyOperatorAndNumberTest: {
-      //TODO add other operators
-      result: /[^0-9+*/-\s]/g.test(message),
+      result: /[^0-9+*/-%^\s]/g.test(message),
       failMessage:
         "Sorry this is not a calculation! Insert something like 1 + 1.",
     },
@@ -36,8 +35,8 @@ const inputfieldValidation = (message) => {
       result: /[0-9]+/.test(message),
     },
     operatorTest: {
-      //TODO add other operators
-      result: /[+*/-]+/.test(message),
+      
+      result: /[+*/-%^]+/.test(message),
     },
     whitespaceTest: {
       result: /^[\s]+$/.test(message)
@@ -106,7 +105,7 @@ const inputfieldValidation = (message) => {
 
     for (let i = 0; i < messageArray.length; i++) {
       if (i % 2 === 0) {
-        //TODO put all operators
+        
         if (!/^[0-9]+$/.test(messageArray[i])) {
           
           return response = {
@@ -117,7 +116,7 @@ const inputfieldValidation = (message) => {
           };
         }     
       } else {
-        if(!/^[+*/-]+$/.test(messageArray[i])) {
+        if(!/^[+*/-%^]+$/.test(messageArray[i])) {
           return response = {
             success: false,
             error: "other_problem",
@@ -240,7 +239,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("old messages", () => {
-    //TODO delete connect again?
+
     
       Chat.find({})
         .sort("-createdAt")

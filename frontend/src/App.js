@@ -5,8 +5,6 @@ import socketIOClient from "socket.io-client";
 
 import {useState, useEffect, useRef, createRef} from 'react';
 
-// TODO: favicon austauschen
-
 let ENDPOINT = "http://127.0.0.1:4001";
 
 if(process.env.NODE_ENV === 'production'){  
