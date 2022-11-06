@@ -3,6 +3,9 @@ const http = require("http");
 const socketIo = require("socket.io");
 const Chat = require("./models/ChatSchema");
 
+// Connects to database
+const connect = require("./dbconnection");
+
 const port = process.env.PORT || 4001;
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +42,7 @@ const inputfieldValidation = (message) => {
     operatorTest: {
       result: /[+%^*/-]+/.test(message),
     },
-    // Checks if there are whitespaces
+    // Checks if there is only one whitespace
     whitespaceTest: {
       result: /^[\s]+$/.test(message),
     },
@@ -103,6 +106,7 @@ const inputfieldValidation = (message) => {
 
     for (let i = 0; i < messageArray.length; i++) {
       if (i % 2 === 0) {
+        // Checks that every even element is a number
         if (!/^[0-9]+$/.test(messageArray[i])) {
           return (response = {
             success: false,
@@ -112,6 +116,7 @@ const inputfieldValidation = (message) => {
           });
         }
       } else {
+        // Checks that every odd element is an operator
         if (!/^[+*/-%^]+$/.test(messageArray[i])) {
           return (response = {
             success: false,
@@ -250,12 +255,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("old messages", () => {
+    
     // Fetches the lasted 10 user message and bot answer from the database
     Chat.find({})
       .sort("-createdAt")
       .limit(10)
       .sort("createdAt")
       .then((chats) => {
+        
         // if the database is empty
         if (chats.length == 0) {
           response = {

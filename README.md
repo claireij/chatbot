@@ -1,6 +1,6 @@
 # Chatbot
 
-Chatbot that resolves simple calculations, implemented with the MERN stack and socket.io.
+Chatbot that resolves simple calculations, implemented with the MERN stack and socket.io. Using MongoDB Altas.
 
 ## Installing Dependencies
 

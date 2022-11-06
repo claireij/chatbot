@@ -34,7 +34,7 @@ function App() {
   const [error, setError] = useState(false);
   const [calculate, setCalculate] = useState(false);
 
-  // Keep the scrollbar at the bottom
+  // Keeps the scrollbar at the bottom
   const scrollToBottom = () => {
     const chat = document.querySelector("form");
     chat.scrollTop = chat.scrollHeight;
@@ -115,7 +115,7 @@ function App() {
           sender: "bot",
         })
       } else {
-        // If the server sends back that the calculation was unsuccessful, then keeps the input open
+        // If the server sends back that the calculation was unsuccessful, then keeps the input field open
         setCalculate(true)
       }
    
@@ -126,7 +126,8 @@ function App() {
     setMessage(e.target.value);
   };
 
-  const handleMessageSend = () => {
+  const handleMessageSend = (e) => {
+    e.preventDefault();
     if (message.length == 0) {
       setError(true);
     } else {
