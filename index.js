@@ -37,85 +37,102 @@ const inputfieldValidation = (message) => {
     },
     operatorTest: {
       //TODO add other operators
-      result: /[+*/-\s]+/.test(message),
+      result: /[+*/-]+/.test(message),
     },
     whitespaceTest: {
-      //TODO umschreiben in RegEx?
-      result: message.includes(" "),
-    },
+      result: /^[\s]+$/.test(message)
+    }
   };
 
-  console.log("String test" + inputTests.stringTest.result);
   if (inputTests.stringTest.result) {
     return (response = {
       success: false,
+      error: "letters",
       message: inputTests.stringTest.failMessage,
     });
   } else if (inputTests.onlyOperatorAndNumberTest.result) {
     return (response = {
       success: false,
+      error: "not_only_numbers_and_operators",
       message: inputTests.onlyOperatorAndNumberTest.failMessage,
     });
   } else if (
-    inputTests.numberTest.result &&
-    !inputTests.operatorTest.result &&
-    !inputTests.whitespaceTest.result
-  ) {
-    return (response = {
-      success: false,
-      message:
-        "So this is just a number... maybe you want to add an operator and a second one? That'd be great!",
-    });
-  } else if (
-    !inputTests.numberTest.result &&
-    inputTests.operatorTest.result &&
-    !inputTests.whitespaceTest.result
-  ) {
-    return (response = {
-      success: false,
-      message:
-        "So this is just an operator. Try again and put some numbers in there!",
-    });
-  } else if (
-    !inputTests.numberTest.result &&
-    !inputTests.operatorTest.result &&
     inputTests.whitespaceTest.result
   ) {
     return (response = {
       success: false,
+      error: "just_whitespaces",
       message: "Ok, this is just whitespace... Maybe try again?",
     });
   }
-  // else if (numberTest && operatorTest && !whitespaceTest) {
-  //   //Doesnt work yet!
-
-  //   response = {
-  //     success: false,
-  //     message:
-  //       "Looks like you wrote your calculation without whitespaces. Please insert something like 1 + 1.",
-  //   };
   if (
     !inputTests.numberTest.result &&
-    inputTests.operatorTest.result &&
-    inputTests.whitespaceTest.result
+    inputTests.operatorTest.result
   ) {
     return (response = {
       success: false,
+      error: "no_numbers",
       message:
         "Looks like you didn't use any numbers in there. Hard one to calculate... try again!",
     });
   } else if (
     inputTests.numberTest.result &&
-    !inputTests.operatorTest.result &&
-    inputTests.whitespaceTest.result
+    !inputTests.operatorTest.result
   ) {
     return (response = {
       success: false,
+      error: "no_operators",
       message: "Did you forget your operators? Try again!",
     });
   } else {
-    return null;
+    let messageArray = message.split(" ");
+
+    if(messageArray.length == 1) {
+      return response = {
+        success: false,
+        error: "no_whitespaces",
+        message: "Seems like you forgot to add some whitespaces between the numbers and the operator, try again!"
+      }
+    }
+   
+
+    if (!/^[0-9]+$/.test(messageArray[0]) || !/^[0-9]+$/.test(messageArray[messageArray.length - 1])) {
+      return response = {
+        success: false,
+        error: "wrong_order",
+        message: "Your calculation needs to beginn and end with a number. Try again!"
+      }
+    }
+
+    for (let i = 0; i < messageArray.length; i++) {
+      if (i % 2 === 0) {
+        //TODO put all operators
+        if (!/^[0-9]+$/.test(messageArray[i])) {
+          
+          return response = {
+            success: false,
+            error: "other_problem",
+            message:
+              "There seem's to be a problem with your calculation. Maybe your missing a part of it or you forgot the whitespaces between the numbers and the operators.",
+          };
+        }     
+      } else {
+        if(!/^[+*/-]+$/.test(messageArray[i])) {
+          return response = {
+            success: false,
+            error: "other_problem",
+            message:
+              "There seem's to be a problem with your calculation. Maybe your missing a part of it or you forgot the whitespaces between the numbers and the operators.",
+          };
+        } 
+      }
+      return null;
+    }
+    
   }
+
+  
+
 };
 
 function calculate(messageArray) {
@@ -196,28 +213,15 @@ io.on("connection", (socket) => {
     } else {
       let messageArray = message.split(" ");
 
+
       for (let i = 0; i < messageArray.length; i++) {
         if (i % 2 === 0) {
-          if (/[0-9]+/.test(messageArray[i])) {
+          if (/^[0-9]+$/.test(messageArray[i])) {
             messageArray.splice(i, 1, parseInt(messageArray[i]));
-          } else {
-            return (response = {
-              success: false,
-              message:
-                "There seem's to be a problem with the order in your calculation.",
-            });
-          }
-        } else {
-          //TODO put all operators
-          if (!/[+*/-\s]+/.test(messageArray[i])) {
-            response = {
-              success: false,
-              message:
-                "There seem's to be a problem with the order in your calculation.",
-            };
-          }
-        }
+          } 
+        } 
       }
+
       let result = calculate(messageArray);
 
       response = {
@@ -225,15 +229,11 @@ io.on("connection", (socket) => {
         message: result,
       };
 
-      console.log(response);
-
-      connect.then(() => {
         let chatMessage = new Chat({
           userMessage: message,
           botAnswer: response.message,
         });
         chatMessage.save();
-      });
     }
 
     io.emit("chat message", response);
@@ -241,23 +241,33 @@ io.on("connection", (socket) => {
 
   socket.on("old messages", () => {
     //TODO delete connect again?
-    connect.then(() => {
+    
       Chat.find({})
         .sort("-createdAt")
         .limit(10)
         .sort("createdAt")
         .then((chats) => {
-          // TODO: if nothing gets returned
-          //TODO stringify whole response? Change in readme
+
           
-          let response = {
-            success: true,
-            oldMessagesList: chats,
-          };
+
+          if(chats.length == 0) {
+            response = {
+              success: false,
+              botAnswer: "Oh, nothing has been calculated yet, start calculating!",
+            };
+          } else {
+            response = {
+              success: true,
+              oldMessagesList: chats,
+            };
+          }
+ 
+          
+         
           response = JSON.stringify(response)
           io.emit("old messages", response);
           console.log(response);
-        });
+        
     });
   });
 

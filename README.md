@@ -38,6 +38,14 @@ npm install
 npm run dev
 ```
 
+## Run tests
+
+Run the following command:
+
+```bash
+npm run test
+```
+
 ## Deployment Setup
 
 This website get automatically deployed to Heroku by pushing the main branch to github.

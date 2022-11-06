@@ -56,6 +56,14 @@ function App() {
     let parsedResponse = JSON.parse(response);
     console.log(parsedResponse.oldMessagesList);
     let newArray = [];
+
+    if(parsedResponse.success == false) {
+      setMessageList([...messageList, {
+        message: parsedResponse.botAnswer,
+        sender: "bot",
+      }])
+      return;
+    }
   
     parsedResponse.oldMessagesList.map(data  =>  {
       

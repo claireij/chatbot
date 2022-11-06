@@ -47,6 +47,7 @@ describe("chatbot", () => {
   it("Calculations: Sending letters instead of a calculation", function (done) {
     clientSocket.on("chat message", function (response) {
       assert.equal(false, response.success);
+      assert.equal("letters", response.error)
       done();
     });
     clientSocket.emit("chat message", "aa");
@@ -55,19 +56,79 @@ describe("chatbot", () => {
   it("Calculations: Sending a message without numbers or operators instead of a calculation", function (done) {
     clientSocket.on("chat message", function (response) {
       assert.equal(false, response.success);
+      assert.equal("not_only_numbers_and_operators", response.error);
       done();
     });
     clientSocket.emit("chat message", "&%$§");
   });
+  it("Calculations: Sending a message with only one number", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("no_operators", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "6678");
+  });
+  it("Calculations: Sending a message with only one operator", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("no_numbers", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "+");
+  });
+  it("Calculations: Sending a message with only whitespace", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("just_whitespaces", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "  ");
+  });
+  it("Calculations: Sending a message without number", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("no_numbers", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "++");
+  });
+  it("Calculations: Sending a message without a operator", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("no_operators", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "234 234");
+  });
+  it("Calculations: Sending a calculation without whitespaces", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("no_whitespaces", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "1+1");
+  });
+  it("Calculations: Sending a calculation with the wrong order", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(false, response.success);
+      assert.equal("wrong_order", response.error);
+      done();
+    });
+    clientSocket.emit("chat message", "+ 1 +");
+  });
+  
 
 //   Old calculations test
 
-  it("Old calculations: ", function (done) {
+  it("Old calculations: Getting the last ten calcuations", function (done) {
     clientSocket.on("old messages", function (response) {
-      assert.equal(false, response.success);
+      const parsedResponse = JSON.parse(response);
+      assert.equal(true, parsedResponse.success);
+      assert.equal(true, parsedResponse.oldMessagesList.length <= 10);
       done();
     });
-    clientSocket.emit("chat message");
+    clientSocket.emit("old messages");
   });
 
 
