@@ -229,11 +229,15 @@ io.on("connection", (socket) => {
         message: result,
       };
 
+      connect.then(() => {
         let chatMessage = new Chat({
           userMessage: message,
           botAnswer: response.message,
         });
         chatMessage.save();
+      })
+
+        
     }
 
     io.emit("chat message", response);
@@ -242,31 +246,28 @@ io.on("connection", (socket) => {
   socket.on("old messages", () => {
     //TODO delete connect again?
     
+    connect.then(() => {
       Chat.find({})
-        .sort("-createdAt")
-        .limit(10)
-        .sort("createdAt")
-        .then((chats) => {
-
-          
-
-          if(chats.length == 0) {
-            response = {
-              success: false,
-              botAnswer: "Oh, nothing has been calculated yet, start calculating!",
-            };
-          } else {
-            response = {
-              success: true,
-              oldMessagesList: chats,
-            };
-          }
- 
-          
-         
-          response = JSON.stringify(response)
-          io.emit("old messages", response);
-          console.log(response);
+      .sort("-createdAt")
+      .limit(10)
+      .sort("createdAt")
+      .then((chats) => {
+        if(chats.length == 0) {
+          response = {
+            success: false,
+            botAnswer: "Oh, nothing has been calculated yet, start calculating!",
+          };
+        } else {
+          response = {
+            success: true,
+            oldMessagesList: chats,
+          };
+        }
+        response = JSON.stringify(response)
+        io.emit("old messages", response);
+        console.log(response);
+    })
+     
         
     });
   });
