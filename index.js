@@ -3,6 +3,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const Chat = require("./models/ChatSchema");
 const connect = require("./dbconnection");
+const { findOneAndReplace } = require("./models/ChatSchema");
 
 const port = process.env.PORT || 4001;
 const app = express();
@@ -73,14 +74,14 @@ io.on("connection", (socket) => {
         success: false,
         message: "Ok, this is just whitespace... Maybe try again?",
       };
-    } else if (numberTest && operatorTest && !whitespaceTest) {
-      //Doesnt work yet!
+    // } else if (numberTest && operatorTest && !whitespaceTest) {
+    //   //Doesnt work yet!
 
-      response = {
-        success: false,
-        message:
-          "Looks like you wrote your calculation without whitespaces. Please insert something like 1 + 1.",
-      };
+    //   response = {
+    //     success: false,
+    //     message:
+    //       "Looks like you wrote your calculation without whitespaces. Please insert something like 1 + 1.",
+    //   };
     } else if (!numberTest && operatorTest && whitespaceTest) {
       response = {
         success: false,
@@ -99,85 +100,119 @@ io.on("connection", (socket) => {
           success: false,
           message: "Your calculation needs to start and end with a number... try again!"
         }
+
+        
+
       } else {
-        // function calculate(input) {
+        // WE need  a test if odds are all operators and if even are all numbers
+        for (let i = 0; i < messageArray.length; i++) {
+          if ( i % 2 === 0) { 
+            if(/[0-9]+/.test(messageArray[i])) {
+              messageArray.splice(i, 1, parseInt(messageArray[i]))
+            }
+           }
+          else { 
+            console.log('trying this');
+           
+           }
+        }
 
-        //   var f = {
-        //     add: '+',
-        //     sub: '-',
-        //     div: '/',
-        //     mlt: '*',
-        //     mod: '%',
-        //     exp: '^'
-        //   };
-        
-        //   // Create array for Order of Operation and precedence
-        //   f.ooo = [
-        //     [
-        //       [f.mlt],
-        //       [f.div],
-        //       [f.mod],
-        //       [f.exp]
-        //     ],
-        //     [
-        //       [f.add],
-        //       [f.sub]
-        //     ]
-        //   ];
-        
-        //   input = message;
-        
-        //   var output;
-        //   for (var i = 0, n = f.ooo.length; i < n; i++) {
-        
-        //     // Regular Expression to look for operators between floating numbers or integers
-        //     var re = new RegExp('(\\d+\\.?\\d*)([\\' + f.ooo[i].join('\\') + '])(\\d+\\.?\\d*)');
-        //     re.lastIndex = 0; // take precautions and reset re starting pos
-        
-        //     // Loop while there is still calculation for level of precedence
-        //     while (re.test(input)) {
-        //       output = _calculate(RegExp.$1, RegExp.$2, RegExp.$3);
-        //       if (isNaN(output) || !isFinite(output)) 
-        //         return output; // exit early if not a number
-        //       input = input.replace(re, output);
-        //     }
-        //   }
-        
-        //   return output;
-        
-        //   function _calculate(a, op, b) {
-        //     a = a * 1;
-        //     b = b * 1;
-        //     switch (op) {
-        //       case f.add:
-        //         return a + b;
-        //         break;
-        //       case f.sub:
-        //         return a - b;
-        //         break;
-        //       case f.div:
-        //         return a / b;
-        //         break;
-        //       case f.mlt:
-        //         return a * b;
-        //         break;
-        //       case f.mod:
-        //         return a % b;
-        //         break;
-        //       case f.exp:
-        //         return Math.pow(a, b);
-        //         break;
-        //       default:
-        //         null;
-        //     }
-        //   }
-        // }
-        
+        console.log(/[0-9]+/.test(messageArray[0]));
 
+        function calculate(input) {
+
+          var operator = {
+            add: '+',
+            sub: '-',
+            div: '/',
+            mlt: '*',
+            mod: '%',
+            exp: '^'
+          };
+        
+          // Create array for Order of Operation and precedence
+          operator.ooo = [
+            [
+              [operator.mlt],
+              [operator.div],
+              [operator.mod],
+              [operator.exp]
+            ],
+            [
+              [operator.add],
+              [operator.sub]
+            ]
+          ];
+        
+          var output;
+          for (var i = 0, n = operator.ooo.length; i < n; i++) {
+            
+            // Regular Expression to look for operators between floating numbers or integers
+            var re = new RegExp('[' + operator.ooo[i] + ']');
+            console.log(re);
+            re.lastIndex = 0; // take precautions and reset re starting pos
+            console.log(messageArray[1], re.test(messageArray[1]));
+            // Loop while there is still calculation for level of precedence
+            for(let j = 0; j < messageArray.length; j++) {
+              if (re.test(messageArray[j]) == true) {
+                output = _calculate(messageArray[j - 1], messageArray[j], messageArray[j + 1]);
+                messageArray.splice(j-1, 3, output);
+                console.log(messageArray);
+              } else {
+                //odd elements are here, you can access it by box
+              }
+            }
+            // while(re.test(messageArray[1])) {
+              // console.log(messageArray[0], messageArray[1], messageArray[2]);
+              // output = _calculate(messageArray[0], messageArray[1], messageArray[2]);
+              // if (isNaN(output) || !isFinite(output)) 
+              //   return output; // exit early if not a number
+              // input = input.replace(re, output);
+            // }
+          }
+        
+          return output;
+        
+          function _calculate(a, op, b) {
+            // a = a * 1;
+            // b = b * 1;
+            switch (op) {
+              case operator.add:
+                return a + b;
+                break;
+              case operator.sub:
+                return a - b;
+                break;
+              case operator.div:
+                return a / b;
+                break;
+              case operator.mlt:
+                return a * b;
+                break;
+              case operator.mod:
+                return a % b;
+                break;
+              case operator.exp:
+                return Math.pow(a, b);
+                break;
+              default:
+                null;
+            }
+          }
+        }
+
+        let result = calculate(message)
+        console.log("This is the result" + result);
+        
         response = {
           success: true,
-          message: eval(message),
+          message: result,
         };
+
+        // response = {
+        //   success: true,
+        //   message: eval(message),
+        // };
   
         connect.then(() => {
           let chatMessage = new Chat({
