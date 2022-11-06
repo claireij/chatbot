@@ -27,7 +27,7 @@ const inputfieldValidation = (message) => {
     },
     // Checks if there are only operators or numbers in the string
     onlyOperatorAndNumberTest: {
-      result: /[^0-9+*/-%^\s]/g.test(message),
+      result: /[^0-9^%+*/-\s]/g.test(message),
       failMessage:
         "Sorry this is not a calculation! Insert something like 1 + 1.",
     },
@@ -36,7 +36,7 @@ const inputfieldValidation = (message) => {
     },
     operatorTest: {
       
-      result: /[+*/-%^]+/.test(message),
+      result: /[+%^*/-]+/.test(message),
     },
     whitespaceTest: {
       result: /^[\s]+$/.test(message)
@@ -135,6 +135,7 @@ const inputfieldValidation = (message) => {
 };
 
 function calculate(messageArray) {
+  // Array of allowed operators
   var operator = {
     add: "+",
     sub: "-",
@@ -154,22 +155,36 @@ function calculate(messageArray) {
   for (var i = 0, n = operator.ooo.length; i < n; i++) {
     // Regular Expression check for operators 
     var re = new RegExp("[" + operator.ooo[i] + "]");
-    re.lastIndex = 0; // take precautions and reset re starting pos
+    re.lastIndex = 0; // take the precaution and reset the starting point
 
-    
-    for (let j = 0; j < messageArray.length; j++) {
-      // Loop while there is still calculation for level of precedence
-      if (re.test(messageArray[j]) == true) {
-        output = _calculate(
-          messageArray[j - 1],
-          messageArray[j],
-          messageArray[j + 1]
-        );
-        messageArray.splice(j - 1, 3, output);
-        console.log(messageArray);
-      } 
+    console.log("Message array before loop" + messageArray);
+
+    function loopAndCalculate (messageArray) {
+      for (let j = 0; j < messageArray.length; j++) {
+        // Loop while there is still calculation for level of precedence
+        if (re.test(messageArray[j]) == true) {
+          
+          output = _calculate(
+            messageArray[j - 1],
+            messageArray[j],
+            messageArray[j + 1]
+          );
+          // Replace the 3 array items with the result of the calculcation
+          messageArray.splice(j - 1, 3, output);
+          
+        } 
+      }
+      return messageArray;
     }
+    
+    // While there are still calculations left in the array, the function loop and calculate is executed
+      let truncatedArray = loopAndCalculate(messageArray);
+      if(truncatedArray.length > 1) {
+        truncatedArray = loopAndCalculate(messageArray);
+      } 
   }
+
+
 
   return output;
 

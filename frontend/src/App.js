@@ -11,13 +11,16 @@ if(process.env.NODE_ENV === 'production'){
   ENDPOINT = "https://chatbot-claire.herokuapp.com";
 }
 
-//TODO prüfen ob es einen besseren Weg gibt, das einzubinden
 const newSocket = socketIOClient(ENDPOINT);
     newSocket.on('connect', (socket) => {
       console.log('socket connected', socket);
     })
 
 function App() {
+
+  useEffect(() => {
+
+  }, [])
 
   const [messageList, setMessageList] = useState([
     {

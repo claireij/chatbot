@@ -110,11 +110,6 @@ input {
 
 }
 
-input:active {
-  /* TODO Vielleicht noch ändern */
-  border:none;
-}
-
 button {
   display: flex;
   justify-content: center;
