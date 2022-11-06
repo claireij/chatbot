@@ -53,9 +53,11 @@ function App() {
   
 
   newSocket.on('old messages', function(response) {
+    let parsedResponse = JSON.parse(response);
+    console.log(parsedResponse.oldMessagesList);
     let newArray = [];
-    let parsedList = JSON.parse(response.oldMessagesList);
-    parsedList.map(data  =>  {
+  
+    parsedResponse.oldMessagesList.map(data  =>  {
       
       const incomingDate = new Date(data.createdAt);
       const formattedIncomingDate = `${incomingDate.getDate()}.${incomingDate.getMonth()+1}.${incomingDate.getFullYear()}  ${incomingDate.getHours()}:${incomingDate.getMinutes()}:${incomingDate.getSeconds()}`;
@@ -99,10 +101,6 @@ function App() {
 
   const handleInputChange = (e) => {
     setMessage(e.target.value)
-
-    
-
-   
   }
 
   const handleMessageSend = (e) => {
