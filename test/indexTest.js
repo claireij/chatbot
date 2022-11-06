@@ -20,7 +20,7 @@ describe("chatbot", () => {
     clientSocket.close();
   });
 
-//   Client connection test
+  //   Client connection test
 
   it("connect", () => {
     it("should connect socket", (done) => {
@@ -32,7 +32,7 @@ describe("chatbot", () => {
     });
   });
 
-//   Calculation tests
+  //   Calculation tests
 
   it("Calculations: Sending a valid calculation to backend", function (done) {
     clientSocket.on("chat message", function (response) {
@@ -47,7 +47,7 @@ describe("chatbot", () => {
   it("Calculations: Sending letters instead of a calculation", function (done) {
     clientSocket.on("chat message", function (response) {
       assert.equal(false, response.success);
-      assert.equal("letters", response.error)
+      assert.equal("letters", response.error);
       done();
     });
     clientSocket.emit("chat message", "aa");
@@ -117,9 +117,16 @@ describe("chatbot", () => {
     });
     clientSocket.emit("chat message", "+ 1 +");
   });
-  
+  it("Calculations: Check if result it right from long calculations", function (done) {
+    clientSocket.on("chat message", function (response) {
+      assert.equal(true, response.success);
+      assert.equal(eval("10 * 10 * 10 + 3 + 5"), response.message);
+      done();
+    });
+    clientSocket.emit("chat message", "10 * 10 * 10 + 3 + 5");
+  });
 
-//   Old calculations test
+  //   Old calculations test
 
   it("Old calculations: Getting the last ten calcuations", function (done) {
     clientSocket.on("old messages", function (response) {
@@ -130,8 +137,4 @@ describe("chatbot", () => {
     });
     clientSocket.emit("old messages");
   });
-
-
 });
-
-

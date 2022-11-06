@@ -3,7 +3,7 @@ import MessageList from "./components/MessageList";
 
 import socketIOClient from "socket.io-client";
 
-import { useState, useEffect, useRef, createRef } from "react";
+import { useState, useEffect} from "react";
 import MessageInput from "./components/MessageInput";
 
 let ENDPOINT = "http://127.0.0.1:4001";
