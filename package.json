@@ -8,7 +8,7 @@
     "test": "mocha",
     "server": "nodemon",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
-    "start": "ts-node index.ts"
+    "start": "npx tsx index.ts"
   },
   "repository": {
     "type": "git",
