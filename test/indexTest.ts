@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { assert } from "chai";
 
-const socketUrl = "http://localhost:4001";
+const socketUrl = process.env.ENDPOINT || ""
 const options = {
   transports: ["websocket"],
   "force new connection": true,
