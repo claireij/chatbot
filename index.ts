@@ -28,7 +28,6 @@ io.on("connection", (socket: Socket) => {
     let response;
 
     const validation = inputfieldValidation(message);
-    console.log("tryyyying")
     if (validation) {
       response = validation;
     } else {
