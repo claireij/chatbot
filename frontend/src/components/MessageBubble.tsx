@@ -1,8 +1,26 @@
 import { useEffect, useState } from "react";
+import React from "react"
 
-function Message({ sender, message, date }) {
+
+export enum MessageSenderEnum  {
+  "BOT",
+  "USER"
+}
+
+export type Message = {
+  sender: MessageSenderEnum,
+  messageText: string, 
+  date?: string
+}
+
+interface MessageInterface {
+  message: Message
+}
+
+export const MessageBubble = ({ message }: MessageInterface) => {
+  const {sender, messageText, date} = message
   const [hovered, setHovered] = useState(false);
-  const [newMessageDate, setNewMessageDate] = useState();
+  const [newMessageDate, setNewMessageDate] = useState("");
 
   // formats date
   useEffect(() => {
@@ -33,10 +51,8 @@ function Message({ sender, message, date }) {
       )}
 
       <div className={classNameBubble}>
-        <p>{message}</p>
+        <p>{messageText}</p>
       </div>
     </div>
   );
 }
-
-export default Message;

@@ -1,30 +1,37 @@
 import { BiCalculator } from "react-icons/bi";
 import { useEffect, useRef } from "react";
+import React from "react"
 
-function MessageInput({
+interface MessageInputInterface {
   handleInputChange,
   handleMessageSend,
-  message,
-  error,
-}) {
-  // Adds the error class, to style the element if there an error
-  const inputClassName = error ? "error" : "";
+  messageText: string,
+  isError: boolean,
+}
 
-  // sets the focus on the input field
-  const inputRef = useRef(null);
+const MessageInput = ({
+  handleInputChange,
+  handleMessageSend,
+  messageText,
+  isError,
+}: MessageInputInterface) => {
+
+  const inputClassName = isError ? "error" : "";
+
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus()
   }, []);
 
   return (
     <>
-      {error ? <p className="error">This field is required.</p> : <></>}
+      {isError ? <p className="error">This field is required.</p> : <></>}
       <div className="div--input">
         <input
           className={inputClassName}
           placeholder="Enter your calculation"
           type="text"
-          value={message}
+          value={messageText}
           onChange={handleInputChange}
           ref={inputRef}
         ></input>
