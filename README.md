@@ -1,6 +1,7 @@
 # Chatbot
 
 Chatbot that resolves simple calculations, implemented with the MERN stack and socket.io. Using MongoDB Altas.
+Deployed under: https://chatbot-clairejul-5edda6af1290.herokuapp.com/
 
 ## Installing Dependencies
 
