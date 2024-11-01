@@ -7,7 +7,7 @@
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
     "test": "mocha",
     "server": "nodemon",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix ../frontend\"",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run start --prefix frontend\"",
     "start": "ts-node index.ts"
   },
   "repository": {
