@@ -13,7 +13,6 @@ import { initialMessages } from "./messages/standardMessage";
 
 export const App = () => {
   const [messageList, setMessageList] = useState<Array<Message>>(initialMessages);
-
   const [messageText, setMessageText] = useState("");
   const [isError, setIsError] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -29,7 +28,6 @@ export const App = () => {
   });
 
   
-  // Receives the result of the calculation from the server and pushs it to the message list
   newSocket.on("chat message", function (response) {
     const newMessageList = [
         ...messageList,
@@ -61,10 +59,8 @@ export const App = () => {
     setIsError(messageText.length === 0)
     
     if (messageText.length !== 0) {
-      // Sends the message from the user to the server
       newSocket.emit("chat message", messageText);
 
-      // Adds the message to the message list
       const newMessageList = [
         ...messageList,
         {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import React from "react"
+import { getCurrentDate } from "../utils/general.utils";
 
 
 export enum MessageSenderEnum  {
-  "BOT",
-  "USER"
+  "BOT" = "bot",
+  "USER" = "user"
 }
 
 export type Message = {
@@ -22,16 +23,11 @@ export const MessageBubble = ({ message }: MessageInterface) => {
   const [hovered, setHovered] = useState(false);
   const [newMessageDate, setNewMessageDate] = useState("");
 
-  // formats date
   useEffect(() => {
-    const current = new Date();
-    const current_date = `${current.getDate()}.${
-      current.getMonth() + 1
-    }.${current.getFullYear()}  ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+    const current_date = getCurrentDate()
     setNewMessageDate(current_date);
   }, []);
 
-  // changes the bubble style depending on the sender
   const classNameBubble = "bubble " + sender;
 
   return (
