@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
+import { mongodbUser, mongodbPassword } from "./config"
 
 const url =
   "mongodb+srv://" +
-  process.env.MONGODB_USER +
+  mongodbUser +
   ":" +
-  process.env.MONGODB_PASSWORD +
+  mongodbPassword +
   "@chat.sfqnr.mongodb.net/?retryWrites=true&w=majority&appName=Chat";
 const connect = mongoose
   .connect(url, { useNewUrlParser: true })

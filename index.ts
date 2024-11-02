@@ -3,9 +3,8 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { Chat } from "./models/ChatSchema";
 import express, { Request, Response } from "express";
 import path from "path";
-import { calculate, inputfieldValidation } from "./helpers";
+import { calculate, inputfieldValidation, parseMessage, saveAndEmitChatMessage } from "./helpers";
 
-// Connects to database
 const connect = require("./dbconnection");
 
 const port = process.env.PORT || 4001;
@@ -20,31 +19,22 @@ const io = new SocketIOServer(server, {
   },
 });
 
-
 io.on("connection", (socket: Socket) => {
-  console.log("New client connected");
 
-  socket.on("chat message", (message: string) => {
-    let response;
-
-    const validation = inputfieldValidation(message);
-    if (validation) {
-      response = validation;
-    } else {
-      const messageArray = message.split(" ").map((element, index) => (index % 2 === 0 ? parseInt(element) : element));
-      const result = calculate(messageArray);
-
-      response = result == null
-        ? { success: false, message: "Sorry, we were unable to solve this calculation." }
-        : { success: true, message: result };
-
-      const chatMessage = new Chat({
-        userMessage: message,
-        botAnswer: response.message,
-      });
-      chatMessage.save();
+  socket.on("chat message", async (message: string) => {
+    const validationError = inputfieldValidation(message);
+    if (validationError) {
+      await saveAndEmitChatMessage(socket, message, validationError.message, false);
+      return;
     }
-    io.emit("chat message", response);
+
+    const messageArray = parseMessage(message);
+    const result = calculate(messageArray);
+    const response = result
+      ? { success: true, message: result }
+      : { success: false, message: "Sorry, we were unable to solve this calculation." };
+
+    await saveAndEmitChatMessage(socket, message, response.message, response.success);
   });
 
   socket.on("old messages", () => {
@@ -58,10 +48,6 @@ io.on("connection", (socket: Socket) => {
           : { success: true, oldMessagesList: chats };
         io.emit("old messages", JSON.stringify(response));
       });
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
   });
 });
 

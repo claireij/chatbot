@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io';
+import { Chat } from './models/ChatSchema';
 interface ValidationResult {
     success: boolean;
     error?: string;
@@ -57,6 +59,7 @@ export const inputfieldValidation = (message: string): ValidationResult | null =
     return null;
   };
 
+  // This function is mocks the behavior of the eval-cmd of the JS math library
 export const calculate = (messageArray: (number | string)[]): number | null => {
     const operator = {
       add: "+",
@@ -111,3 +114,13 @@ export const calculate = (messageArray: (number | string)[]): number | null => {
     }
     return output;
   };
+
+export const parseMessage = (message: string): (number | string)[] => {
+  return message.split(" ").map((element, index) => (index % 2 === 0 ? parseInt(element) : element));
+};
+
+export const saveAndEmitChatMessage = async (socket: Socket, userMessage: string, botAnswer: string | number, success: boolean) => {
+  const chatMessage = new Chat({ userMessage, botAnswer });
+  await chatMessage.save();
+  socket.emit("chat message", { success, message: botAnswer });
+};

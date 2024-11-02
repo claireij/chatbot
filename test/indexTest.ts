@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { assert } from "chai";
+import { endpoint } from "../config";
 
-const socketUrl = process.env.ENDPOINT || ""
 const options = {
   transports: ["websocket"],
   "force new connection": true,
@@ -11,7 +11,7 @@ describe("chatbot", () => {
   let clientSocket: Socket;
 
   beforeEach((done) => {
-    clientSocket = io(socketUrl, options);
+    clientSocket = io(endpoint, options);
     clientSocket.on("connect", done);
   });
 
